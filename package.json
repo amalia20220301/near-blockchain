@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "bip39": "^3.0.4",
+    "bs58": "^5.0.0",
     "dotenv": "^16.0.1",
     "ed25519-hd-key": "^1.2.0",
     "tweetnacl": "^1.0.3"

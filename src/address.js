@@ -2,8 +2,7 @@ import 'dotenv/config'
 import nacl from 'tweetnacl';
 import { derivePath, getMasterKeyFromSeed, getPublicKey } from 'ed25519-hd-key'
 import bip39 from 'bip39'
-
-const seed = bip39.mnemonicToSeedSync(process.env.WORDS)
+import bs58 from 'bs58';
 
 function buf2hex(buffer) { // buffer is an ArrayBuffer
     return [...new Uint8Array(buffer)]
@@ -11,10 +10,12 @@ function buf2hex(buffer) { // buffer is an ArrayBuffer
         .join('');
 }
 
-export const getAddress = (path) => {
-    const seed = bip39.mnemonicToSeedSync(process.env.WORDS)
+export const getAddress = (path, seed) => {
     const { key } = derivePath(path, seed.toString('hex'));
-    return buf2hex(nacl.sign.keyPair.fromSeed(key).publicKey);
+    const keyPair = nacl.sign.keyPair.fromSeed(key);
+    const publicKey = 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey))
+    const secretKey = 'ed25519:' + bs58.encode(Buffer.from(keyPair.secretKey))
+    return {publicKey, secretKey}
 }
 
 export const getPrivKey = (path) => {
@@ -23,5 +24,8 @@ export const getPrivKey = (path) => {
     return nacl.sign.keyPair.fromSeed(key).secretKey
 }
 
-const path = "m/44'/397'/0'/0'/3'"
-console.log(getAddress(path));
+const path = "m/44'/397'/0'/0'/0'"
+
+const passphase_path =  "m/44'/397'/0'"
+
+console.log(getAddress(path, bip39.mnemonicToSeedSync(process.env.WORDS)));
