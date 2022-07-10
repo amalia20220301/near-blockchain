@@ -18,12 +18,18 @@ export const getAddress = (path, seed) => {
     console.log('---------------');
     const publicKey = 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey))
     const secretKey = 'ed25519:' + bs58.encode(Buffer.from(keyPair.secretKey))
+    console.log('-------getAddress--------');
+    console.log(bs58.encode(Buffer.from(keyPair.secretKey)));
+    console.log('---------------');
     return {publicKey, secretKey}
 }
 
 export const getPrivKey = (path) => {
     const seed = bip39.mnemonicToSeedSync(process.env.WORDS)
     const { key } = derivePath(path, seed.toString('hex'))
+    console.log('-------getPrivKey--------');
+    console.log(key);
+    console.log('---------------');
     return nacl.sign.keyPair.fromSeed(key).secretKey
 }
 
@@ -34,5 +40,5 @@ const passphase_path =  "m/44'/397'/0'"
 
 // console.log(getAddress(path, bip39.mnemonicToSeedSync(process.env.WORDS)));
 console.log('------naksh-mrzhao.testnet---------')
-console.log(getAddress("m/44'/397'/0'/0'/1'", bip39.mnemonicToSeedSync(process.env.WORDS)))
+console.log(getAddress("m/44'/397'/0'", bip39.mnemonicToSeedSync(process.env.WORDS)))
 console.log('---------------')
